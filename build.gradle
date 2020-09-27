@@ -16,8 +16,8 @@ plugins {
 group 'some.tests'
 version '1.0'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 15
+targetCompatibility = 15
 
 ext {
     allureVersion = '2.13.5'

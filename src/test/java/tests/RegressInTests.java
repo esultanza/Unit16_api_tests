@@ -22,48 +22,79 @@ public class RegressInTests {
     }
 
     @Test
-    @AllureId("1513")
-    void successSingleUserTest() {
+    void successSingleResourceTest() {
         given()
                 .when()
-                .get("/users/2")
+                .get("/unknown/2")
                 .then()
                 .statusCode(200)
                 .log().body()
-                .body("data.email", is("janet.weaver@reqres.in"));
+                .body("ad.company", is("StatusCode Weekly"));
     }
 
     @Test
-    void successLoginTest() {
-        String data = "{\n" +
-                "    \"email\": \"eve.holt@reqres.in\",\n" +
-                "    \"password\": \"cityslicka\"\n" +
-                "}";
+    void successCreateTest() {
+        String data = """
+                {"name": "taya",
+                "job": "qa"}
+                """;
 
         given()
                 .contentType(ContentType.JSON)
                 .body(data)
                 .when()
-                .post("/login")
+                .post("/users")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .log().body()
-                .body("token", is(notNullValue()));
+                .body("id", is(notNullValue()));
     }
 
     @Test
-    void successLoginWithDataFromResourcesTest() {
+    void successPatchTest() {
+        String data = """
+                {"name": "Taya",
+                "job": "engineer"}
+                """;
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(data)
+                .when()
+                .post("/users/2")
+                .then()
+                .statusCode(201)
+                .log().body()
+                .body("job", is("engineer"));
+    }
+
+    @Test
+    void successRegisterWithDataFromResourcesTest() {
         String data = readStringFromFile("src/test/resources/regress_in_login_data.json");
 
         given()
                 .contentType(ContentType.JSON)
                 .body(data)
                 .when()
-                .post("/login")
+                .post("/register")
                 .then()
                 .statusCode(200)
                 .log().body()
                 .body("token", is(notNullValue()));
+    }
+
+    @Test
+    void unsuccessLoginTest() {
+        String data = "{\"email\": \"peter@pen\"}";
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(data)
+                .when()
+                .post("/login")
+                .then()
+                .statusCode(400)
+                .log().body();
     }
 
     @Test

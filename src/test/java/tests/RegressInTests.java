@@ -22,6 +22,7 @@ public class RegressInTests {
     }
 
     @Test
+    @AllureId("1513")
     void successSingleUserTest() {
         given()
                 .when()
